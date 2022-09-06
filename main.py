@@ -9,6 +9,42 @@ class Letter:
         self.pos_weights = pos_weights
 
 
+class Affix:
+    def __init__(self, name: str):
+        self.name = name
+        self.size = len(self.name)
+
+
+def decides_affix() -> list:
+
+    rand_a = random.randint(0, 100)
+
+    bools = [False, False]
+
+    if rand_a < 10:
+        bools[0] = True
+
+    rand_b = random.randint(0, 100)
+
+    if rand_b < 10:
+        bools[1] = True
+
+    return bools
+
+
+def get_affixes(prefixes: list, suffixes: list, which_has: list) -> list:
+
+    affixes = [Affix(''), Affix('')]
+
+    if which_has[0]:
+        affixes[0] = random.choice(prefixes)
+
+    if which_has[1]:
+        affixes[1] = random.choice(suffixes)
+
+    return affixes
+
+
 def get_random_letter(list_of_letters: list, position: int, sums: list) -> Letter:
 
     rand = random.randint(0, math.floor(sums[position]) * 100)
@@ -61,6 +97,26 @@ def main():
         Letter('z', 0.0051, [0.5, 0, 0.25, 0.4, 0.6, 0.75, 1.5, 1, 0])
     ]
 
+    common_prefixes = [
+        Affix("dis"),
+        Affix("in"),
+        Affix("im"),
+        Affix("il"),
+        Affix("ir"),
+        Affix("re"),
+        Affix("un")
+    ]
+
+    common_suffixes = [
+        Affix("ed"),
+        Affix("ing"),
+        Affix("ly"),
+        Affix("s"),
+        Affix("es"),
+        Affix("er"),
+        Affix("en")
+    ]
+
     sums = [0] * 9
 
     for i in list_of_letters:
@@ -84,8 +140,33 @@ def main():
     for j in range(num_word):
         word = ""
 
-        for i in range(word_size):
+        k = 0
+
+        has_affixes = decides_affix()
+
+        affixes = get_affixes(common_prefixes, common_suffixes, has_affixes)
+
+        prefix = affixes[0]
+        suffix = affixes[1]
+
+        if prefix.size >= word_size - 2:
+            has_affixes[0] = False
+            prefix = Affix('')
+
+        if suffix.size >= word_size - 2:
+            has_affixes[1] = False
+            suffix = Affix('')
+
+        if has_affixes[0]:
+            word += prefix.name
+
+        if has_affixes[1]:
+            k = suffix.size
+
+        for i in range(prefix.size, word_size - k):
             word += get_random_letter(list_of_letters, i - 1, sums).name
+
+        word += suffix.name
 
         print(word)
 
