@@ -68,7 +68,7 @@ def main():
             sums[n] += i.pos_weights[n]
 
     try:
-        word_size = int(input("Insert the size of the word you want to generate:\n>> "))
+        word_size = int(input("Insert the size of the word you want to generate (max: 9):\n>> "))
         num_word = int(input("Insert how many words you want to generate:\n>> "))
     except ValueError:
         print("Invalid input")
