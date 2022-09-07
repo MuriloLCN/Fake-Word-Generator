@@ -15,18 +15,18 @@ class Affix:
         self.size = len(self.name)
 
 
-def decides_affix() -> list:
+def decides_affix(chance: int) -> list:
 
     rand_a = random.randint(0, 100)
 
     bools = [False, False]
 
-    if rand_a < 10:
+    if rand_a < chance:
         bools[0] = True
 
     rand_b = random.randint(0, 100)
 
-    if rand_b < 10:
+    if rand_b < chance:
         bools[1] = True
 
     return bools
@@ -104,6 +104,13 @@ def main():
         Affix("il"),
         Affix("ir"),
         Affix("re"),
+        Affix("un"),
+        Affix("a"),
+        Affix("an"),
+        Affix("anti"),
+        Affix("auto"),
+        Affix("co"),
+        Affix("sub"),
         Affix("un")
     ]
 
@@ -114,7 +121,15 @@ def main():
         Affix("s"),
         Affix("es"),
         Affix("er"),
-        Affix("en")
+        Affix("en"),
+        Affix("ion"),
+        Affix("ism"),
+        Affix("ity"),
+        Affix("ness"),
+        Affix("or"),
+        Affix("al"),
+        Affix("ful"),
+        Affix("less")
     ]
 
     sums = [0] * 9
@@ -123,16 +138,25 @@ def main():
         for n in range(len(i.pos_weights)):
             sums[n] += i.pos_weights[n]
 
+    chance_affix = 50
+
     try:
-        word_size = int(input("Insert the size of the word you want to generate (max: 9):\n>> "))
+        word_size = int(input("Insert the size of the word you want to generate (max: 9, insert 0 for random"
+                              " from 4-7):\n>> "))
         num_word = int(input("Insert how many words you want to generate:\n>> "))
+        chance_affix = int(input("Insert how often affixes can appear (0-100, default: 50, higher is usually better)"))
     except ValueError:
         print("Invalid input")
         return
 
-    if word_size > 9 or word_size <= 0:
+    if word_size > 9 or word_size < 0:
         print("Invalid word size")
         return
+
+    is_random_size = False
+
+    if word_size == 0:
+        is_random_size = True
 
     if num_word <= 0:
         print("Needs a positive number of words to generate")
@@ -142,12 +166,15 @@ def main():
 
         k = 0
 
-        has_affixes = decides_affix()
+        has_affixes = decides_affix(chance_affix)
 
         affixes = get_affixes(common_prefixes, common_suffixes, has_affixes)
 
         prefix = affixes[0]
         suffix = affixes[1]
+
+        if is_random_size:
+            word_size = random.randint(4, 7)
 
         if prefix.size >= word_size - 2:
             has_affixes[0] = False
